@@ -16,3 +16,8 @@ class CardAccountViewSet(viewsets.ReadOnlyModelViewSet):
 class TransactionListCreateView(generics.ListCreateAPIView):
     queryset = TransactionModel.objects.all()
     serializer_class = TransactionSerializer
+
+
+class TransactionDetailView(generics.RetrieveAPIView):
+    queryset = TransactionModel.objects.all()
+    serializer_class = TransactionSerializer
