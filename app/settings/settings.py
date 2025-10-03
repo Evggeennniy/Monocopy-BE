@@ -25,24 +25,27 @@ SECRET_KEY = "django-insecure-jh474$xp85k+lv!2bc7lrr0%&4mf(k-y%688%&d&kj&a=x1#or
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["shironenergy.com", "www.shironenergy.com"]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost",
+    "https://shironenergy.com",
+    "https://www.shironenergy.com",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost",
+    "https://shironenergy.com",
+    "https://www.shironenergy.com",
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
-SESSION_COOKIE_SAMESITE = "Lax"
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
+# Убираем это, чтобы CORS работал корректно с credentials
+CORS_ALLOW_ALL_ORIGINS = False
 
+CORS_ALLOW_CREDENTIALS = True
+
+SESSION_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_SECURE = True
 
 # Application definition
 
