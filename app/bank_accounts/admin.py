@@ -34,25 +34,45 @@ class CardAccountAdmin(admin.ModelAdmin):
 
 @admin.register(TransactionModel)
 class TransactionAdmin(admin.ModelAdmin):
-    list_display = ("id", "amount", "from_card", "to_card", "timestamp")
-    list_filter = ("timestamp",)
-    search_fields = ("from_card", "to_card",)
-
-    readonly_fields = ("timestamp",)
+    list_display = ("id", "amount", "from_card", "to_card", "operation_type", "timestamp")
+    readonly_fields = ("timestamp", "operation_type")
+    search_fields = ("from_card", "to_card")
 
     def save_model(self, request, obj, form, change):
-        if not change:
+        """
+        При создании новой транзакции обновляем баланс нужной карты.
+        """
+        if not change:  # только при создании новой транзакции
             if obj.amount <= 0:
-                raise ValidationError("Amount must be greater than 0.")
+                raise ValidationError("Сумма должна быть больше 0.")
 
-            card = CardAccountModel.objects.filter(card_number=obj.to_card).first()
-            if card:
-                if obj.operation_type == "deposit":
-                    card.balance += obj.amount
-                elif obj.operation_type == "withdraw":
-                    if card.balance < obj.amount:
-                        raise ValidationError("Insufficient funds for withdrawal.")
-                    card.balance -= obj.amount
-                card.save()
+            # если нашли карту получателя → пополнение
+            to_card = CardAccountModel.objects.filter(card_number=obj.to_card).first()
+            from_card = CardAccountModel.objects.filter(card_number=obj.from_card).first()
+
+            if to_card and not from_card:
+                obj.operation_type = "deposit"
+                to_card.balance += obj.amount
+                to_card.save()
+
+            elif from_card and not to_card:
+                if from_card.balance < obj.amount:
+                    raise ValidationError("Недостаточно средств для списания.")
+                obj.operation_type = "withdraw"
+                from_card.balance -= obj.amount
+                from_card.save()
+
+            elif from_card and to_card:
+                # внутренний перевод между своими картами
+                if from_card.balance < obj.amount:
+                    raise ValidationError("Недостаточно средств на карте отправителя.")
+                obj.operation_type = "external"  # можно переименовать в "transfer"
+                from_card.balance -= obj.amount
+                to_card.balance += obj.amount
+                from_card.save()
+                to_card.save()
+            else:
+                # если обе карты неизвестны системе
+                obj.operation_type = "external"
 
         super().save_model(request, obj, form, change)
