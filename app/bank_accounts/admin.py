@@ -1,4 +1,5 @@
 from django.contrib import admin
+from bank_accounts.forms import TransactionAdminForm
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from django.core.exceptions import ValidationError
@@ -34,9 +35,21 @@ class CardAccountAdmin(admin.ModelAdmin):
 
 @admin.register(TransactionModel)
 class TransactionAdmin(admin.ModelAdmin):
-    list_display = ("id", "amount", "from_card", "to_card", "operation_type", "timestamp")
-    readonly_fields = ("timestamp", "operation_type")
+    form = TransactionAdminForm
+
+    list_display = ("id", "amount", "from_card", "to_card", "operation_type", "balance_after", "timestamp")
+    readonly_fields = ("timestamp", "operation_type", "balance_after")
     search_fields = ("from_card", "to_card")
+
+    def render_change_form(self, request, context, *args, **kwargs):
+        """
+        Чтобы форма корректно вставляла datalist под поля.
+        """
+        form = context.get("adminform").form
+        if hasattr(form, "as_p_with_datalist"):
+            context["adminform"].form = form
+            context["adminform"].form.as_p = form.as_p_with_datalist
+        return super().render_change_form(request, context, *args, **kwargs)
 
     def save_model(self, request, obj, form, change):
         """

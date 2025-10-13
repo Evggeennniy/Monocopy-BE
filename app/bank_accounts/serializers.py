@@ -8,7 +8,7 @@ class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = TransactionModel
         fields = "__all__"
-        read_only_fields = ("operation_type", "timestamp")
+        read_only_fields = ("operation_type", "timestamp", "balance_after")
 
     def create(self, validated_data):
         amount = validated_data.get("amount")

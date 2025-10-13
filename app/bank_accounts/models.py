@@ -42,6 +42,9 @@ class TransactionModel(models.Model):
 
     cardholder_name = models.CharField(
         max_length=32,
+        null=True,
+        blank=True,
+        default='',
         verbose_name=_("Инициатор операции")
     )
     from_card = models.CharField(
@@ -67,6 +70,13 @@ class TransactionModel(models.Model):
         editable=False,
         verbose_name=_("Тип операции")
     )
+    balance_after = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        verbose_name=_("Баланс после транзакции")
+    )
     timestamp = models.DateTimeField(
         auto_now_add=True,
         verbose_name=_("Дата и время")
@@ -79,10 +89,16 @@ class TransactionModel(models.Model):
     def save(self, *args, **kwargs):
         if CardAccountModel.objects.filter(card_number=self.to_card).exists():
             self.operation_type = "deposit"
+            card = CardAccountModel.objects.get(card_number=self.to_card)
+            self.balance_after = card.balance
         elif CardAccountModel.objects.filter(card_number=self.from_card).exists():
             self.operation_type = "withdraw"
+            card = CardAccountModel.objects.get(card_number=self.from_card)
+            self.balance_after = card.balance
         else:
             self.operation_type = "external"
+            self.balance_after = None
+
         super().save(*args, **kwargs)
 
     def __str__(self):
