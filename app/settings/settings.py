@@ -25,17 +25,17 @@ SECRET_KEY = "django-insecure-jh474$xp85k+lv!2bc7lrr0%&4mf(k-y%688%&d&kj&a=x1#or
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["shironenergy.com", "127.0.0.1",]
+ALLOWED_HOSTS = ["shironenergy.com", "127.0.0.1", 'monocopy-fe.vercel.app']
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    'http://192.168.0.115:5173',
+    'https://monocopy-fe.vercel.app',
     "https://shironenergy.com",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
-    'http://192.168.0.115:5173',
+    'https://monocopy-fe.vercel.app',
     "https://shironenergy.com",
 ]
 
