@@ -81,6 +81,12 @@ class TransactionModel(models.Model):
         auto_now_add=True,
         verbose_name=_("Дата и время")
     )
+    comment = models.TextField(
+        null=True,
+        blank=True,
+        default='',
+        verbose_name=_("Комментарий")
+    )
 
     class Meta:
         verbose_name = _("Транзакция")
