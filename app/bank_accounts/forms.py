@@ -33,7 +33,6 @@ class CardNumberDatalistWidget(forms.TextInput):
 
 class TransactionAdminForm(forms.ModelForm):
     # Важно: оставляем CharField, чтобы можно было ввести ЛЮБОЕ значение
-    from_card = forms.CharField(required=False, label="Карта отправителя")
     to_card = forms.CharField(required=False, label="Карта получателя")
 
     class Meta:
@@ -44,6 +43,4 @@ class TransactionAdminForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         cards_qs = CardAccountModel.objects.select_related("user").all()
 
-        # Навешиваем наш виджет на оба поля
-        self.fields["from_card"].widget = CardNumberDatalistWidget(queryset=cards_qs, attrs={"class": "vTextField"})
         self.fields["to_card"].widget = CardNumberDatalistWidget(queryset=cards_qs, attrs={"class": "vTextField"})

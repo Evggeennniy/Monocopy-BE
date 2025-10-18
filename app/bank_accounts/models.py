@@ -40,12 +40,32 @@ class TransactionModel(models.Model):
         ("external", _("Внешняя операция")),
     )
 
+    image_deposit = models.ImageField(
+        upload_to='transactions/deposits/',
+        null=True,
+        blank=True,
+        verbose_name=_("Изображение при пополнении")
+    )
+    image_withdraw = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        verbose_name=_("Изображение при списании")
+    )
+
     cardholder_name = models.CharField(
         max_length=32,
         null=True,
         blank=True,
         default='',
         verbose_name=_("Инициатор операции")
+    )
+    to_user = models.CharField(
+        max_length=32,
+        null=True,
+        blank=True,
+        default='',
+        verbose_name=_("Получатель")
     )
     from_card = models.CharField(
         max_length=16,
