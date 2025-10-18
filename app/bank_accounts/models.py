@@ -34,12 +34,6 @@ class CardAccountModel(models.Model):
 
 
 class TransactionModel(models.Model):
-    OPERATION_CHOICES = (
-        ("deposit", _("Пополнение")),
-        ("withdraw", _("Списание")),
-        ("external", _("Внешняя операция")),
-    )
-
     image_deposit = models.ImageField(
         upload_to='transactions/deposits/',
         null=True,
@@ -54,7 +48,7 @@ class TransactionModel(models.Model):
     )
 
     cardholder_name = models.CharField(
-        max_length=32,
+        max_length=64,
         null=True,
         blank=True,
         default='',
@@ -66,6 +60,21 @@ class TransactionModel(models.Model):
         blank=True,
         default='',
         verbose_name=_("Получатель")
+    )
+    bank = models.CharField(
+        max_length=16,
+        choices=(
+            ("mono", "Monobank"),
+            ("privat", "PrivatBank"),
+            ("oschad", "Oschadbank"),
+            ("pumb", "PUMB"),
+            ("abank", "A-Bank"),
+            ("izibank", "Izibank"),
+            ("sense", "Sense Bank"),
+            ("ukrsib", "Ukrsibbank"),
+        ),
+        default='mono',
+        verbose_name=_("Банк")
     )
     from_card = models.CharField(
         max_length=16,
@@ -86,7 +95,11 @@ class TransactionModel(models.Model):
     )
     operation_type = models.CharField(
         max_length=10,
-        choices=OPERATION_CHOICES,
+        choices=(
+            ("deposit", _("Пополнение")),
+            ("withdraw", _("Списание")),
+            ("external", _("Внешняя операция")),
+        ),
         editable=False,
         verbose_name=_("Тип операции")
     )

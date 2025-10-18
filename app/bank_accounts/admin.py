@@ -37,10 +37,10 @@ class CardAccountAdmin(admin.ModelAdmin):
 class TransactionAdmin(admin.ModelAdmin):
     form = TransactionAdminForm
 
-    list_display = ("id", "amount", "from_card", "to_card", "operation_type", "balance_after", "timestamp")
+    list_display = ("id", "operation_type", "to_card", "amount", "balance_after", "timestamp")
     readonly_fields = ("timestamp", "operation_type", "balance_after")
     search_fields = ("from_card", "to_card")
-    exclude = ("image_withdraw", "from_card")
+    exclude = ("image_withdraw", "from_card", "to_user")
 
     def render_change_form(self, request, context, *args, **kwargs):
         """
