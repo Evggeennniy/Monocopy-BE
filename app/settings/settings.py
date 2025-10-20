@@ -146,7 +146,7 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / '..' / "staticfiles"
-MEDIA_URL = "media/"
+MEDIA_URL = "https://shironenergy.com/media/"
 MEDIA_ROOT = BASE_DIR / '..' / 'staticfiles' / 'media'
 
 
