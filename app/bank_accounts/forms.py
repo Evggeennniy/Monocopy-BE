@@ -111,16 +111,6 @@ class TransactionAdminForm(forms.ModelForm):
 
         # заголовок
         choices.append(("", "--- Рандомные аватарки ---"))
-
-        # рандомные картинки
-        if not self.initial.get("image_deposit_choice_urls"):
-            avatar_ids = random.sample(range(1, 70), 17)
-            random_choices = [(f"https://i.pravatar.cc/80?img={i}", f"Avatar {i}") for i in avatar_ids]
-            self.initial["image_deposit_choice_urls"] = random_choices
-        else:
-            random_choices = self.initial["image_deposit_choice_urls"]
-
-        choices.extend(random_choices)
         self.fields["image_deposit_choice"].choices = choices
 
     def clean(self):
