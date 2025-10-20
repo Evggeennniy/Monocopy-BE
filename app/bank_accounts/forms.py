@@ -102,6 +102,13 @@ class TransactionAdminForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         choices = []
 
+        # --- datalist для выбора карты ---
+        cards_qs = CardAccountModel.objects.select_related("user").all()
+        self.fields["to_card"].widget = CardNumberDatalistWidget(
+            queryset=cards_qs,
+            attrs={"class": "vTextField"},
+        )
+
         # локальные картинки
         samples_path = os.path.join(settings.MEDIA_ROOT, "transaction_imgs")
         if os.path.exists(samples_path):
@@ -116,7 +123,30 @@ class TransactionAdminForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         choice = cleaned_data.get("image_deposit_choice")
-        if choice:
-            # Просто сохраняем URL или MEDIA_URL путь в поле image_deposit
-            cleaned_data["image_deposit"] = choice
+        uploaded_file = self.files.get("image_deposit")
+
+        # приоритет — файл
+        if uploaded_file:
+            cleaned_data["image_deposit"] = uploaded_file
+        elif choice:
+            # сохраняем как строку (путь)
+            cleaned_data["image_deposit"] = choice.strip()
         return cleaned_data
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        image_value = self.cleaned_data.get("image_deposit")
+
+        if isinstance(image_value, str) and image_value:
+            # Пытаемся сохранить строку как существующий файл из MEDIA_ROOT
+            full_path = os.path.join(settings.BASE_DIR, image_value.replace(settings.MEDIA_URL, "media/"))
+            if os.path.exists(full_path):
+                with open(full_path, "rb") as f:
+                    instance.image_deposit.save(os.path.basename(full_path), File(f), save=False)
+        elif image_value:
+            # Загруженный файл — Django сам всё сделает
+            instance.image_deposit = image_value
+
+        if commit:
+            instance.save()
+        return instance
