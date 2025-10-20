@@ -138,13 +138,9 @@ class TransactionAdminForm(forms.ModelForm):
         image_value = self.cleaned_data.get("image_deposit")
 
         if isinstance(image_value, str) and image_value:
-            # Пытаемся сохранить строку как существующий файл из MEDIA_ROOT
-            full_path = os.path.join(settings.BASE_DIR, image_value.replace(settings.MEDIA_URL, "media/"))
-            if os.path.exists(full_path):
-                with open(full_path, "rb") as f:
-                    instance.image_deposit.save(os.path.basename(full_path), File(f), save=False)
+            relative_path = image_value.replace(settings.MEDIA_URL, "").lstrip("/")
+            instance.image_deposit = relative_path
         elif image_value:
-            # Загруженный файл — Django сам всё сделает
             instance.image_deposit = image_value
 
         if commit:
