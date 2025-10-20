@@ -1,9 +1,12 @@
+from urllib.parse import urlencode
 from django.contrib import admin
 from bank_accounts.forms import TransactionAdminForm
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from django.core.exceptions import ValidationError
 from bank_accounts.models import CardAccountModel, TransactionModel
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 admin.site.unregister(User)
 
@@ -41,6 +44,30 @@ class TransactionAdmin(admin.ModelAdmin):
     readonly_fields = ("timestamp", "operation_type", "balance_after")
     search_fields = ("from_card", "to_card")
     exclude = ("image_withdraw", "from_card", "to_user")
+
+    fields = (
+        "image_deposit",
+        "image_deposit_choice",
+        "cardholder_name",
+        "bank",
+        "to_card",
+        "amount",
+        "comment",
+        "operation_type",
+        "balance_after",
+        "timestamp",
+    )
+
+    class Media:
+        css = {
+            "all": ("https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css",)
+        }
+
+    def get_fields(self, request, obj=None):
+        fields = super().get_fields(request, obj)
+        if "image_deposit_choice" not in fields:
+            fields = list(fields) + ["image_deposit_choice"]
+        return fields
 
     def render_change_form(self, request, context, *args, **kwargs):
         """
@@ -90,3 +117,26 @@ class TransactionAdmin(admin.ModelAdmin):
                 obj.operation_type = "external"
 
         super().save_model(request, obj, form, change)
+
+    def response_add(self, request, obj, post_url_continue=None):
+        """
+        При нажатии 'Save and add another' открываем новую форму
+        с копированием нужных полей предыдущего объекта.
+        """
+        if "_addanother" in request.POST:
+            copy_fields = [
+                "image_deposit",
+                "cardholder_name",
+                "bank",
+                "to_card",
+                "amount",
+            ]
+            data = {f: getattr(obj, f) for f in copy_fields if getattr(obj, f) is not None}
+
+            # URL новой формы
+            add_url = reverse("admin:%s_%s_add" % (obj._meta.app_label, obj._meta.model_name))
+            query_string = urlencode(data)
+            url = f"{add_url}?{query_string}"
+            return HttpResponseRedirect(url)
+
+        return super().response_add(request, obj, post_url_continue)

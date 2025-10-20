@@ -72,6 +72,7 @@ class TransactionModel(models.Model):
             ("izibank", "Izibank"),
             ("sense", "Sense Bank"),
             ("ukrsib", "Ukrsibbank"),
+            ("others", "Другой"),
         ),
         default='mono',
         verbose_name=_("Банк")
