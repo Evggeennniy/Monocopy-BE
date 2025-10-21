@@ -67,6 +67,7 @@ class TransactionModel(models.Model):
             ("mono", "Monobank"),
             ("privat", "PrivatBank"),
             ("oschad", "Oschadbank"),
+            ("raiff", "Raiffeisen Bank"),
             ("pumb", "PUMB"),
             ("abank", "A-Bank"),
             ("izibank", "Izibank"),
