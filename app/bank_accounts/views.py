@@ -1,7 +1,8 @@
 from rest_framework import viewsets, generics, status
 from rest_framework.permissions import IsAuthenticated
-from bank_accounts.models import CardAccountModel, TransactionModel
-from bank_accounts.serializers import CardAccountSerializer, TransactionSerializer
+from rest_framework.views import APIView
+from bank_accounts.models import CardAccountModel, TransactionModel, UserContactModel
+from bank_accounts.serializers import CardAccountSerializer, TransactionSerializer, UserContactSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema, OpenApiParameter
@@ -44,3 +45,14 @@ class TransactionListCreateView(generics.ListCreateAPIView):
 class TransactionDetailView(generics.RetrieveAPIView):
     queryset = TransactionModel.objects.all()
     serializer_class = TransactionSerializer
+
+
+class MyContactsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserContactSerializer(
+            request.user.contacts.all(),
+            many=True
+        )
+        return Response(serializer.data)

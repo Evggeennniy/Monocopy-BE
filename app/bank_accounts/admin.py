@@ -4,17 +4,25 @@ from bank_accounts.forms import TransactionAdminForm
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from django.core.exceptions import ValidationError
-from bank_accounts.models import CardAccountModel, TransactionModel
+from bank_accounts.models import CardAccountModel, TransactionModel, UserContactModel
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 admin.site.unregister(User)
 
 
+class UserContactInline(admin.TabularInline):
+    model = UserContactModel
+    extra = 1
+    fields = ("avatar", "name", "bank")
+    show_change_link = True
+
+
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
     list_display = ("username", "email", "is_staff", "is_active")
     search_fields = ("username", "email")
+    inlines = [UserContactInline]
 
 
 @admin.register(CardAccountModel)

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.db import models
 from django.contrib.auth.models import User
-from bank_accounts.models import CardAccountModel, TransactionModel
+from bank_accounts.models import CardAccountModel, TransactionModel, UserContactModel
 
 
 class TransactionSerializer(serializers.ModelSerializer):
@@ -58,3 +58,15 @@ class CardAccountSerializer(serializers.ModelSerializer):
             models.Q(from_card=obj.card_number) | models.Q(to_card=obj.card_number)
         )
         return TransactionSerializer(transactions, many=True).data
+
+
+class UserContactSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserContactModel
+        fields = (
+            "id",
+            "avatar",
+            "name",
+            "bank",
+        )

@@ -2,6 +2,19 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+BANK_CHOICES = (
+    ("mono", "Monobank"),
+    ("privat", "PrivatBank"),
+    ("oschad", "Oschadbank"),
+    ("raiff", "Raiffeisen Bank"),
+    ("pumb", "PUMB"),
+    ("abank", "A-Bank"),
+    ("izibank", "Izibank"),
+    ("sense", "Sense Bank"),
+    ("ukrsib", "Ukrsibbank"),
+    ("others", "Другой"),
+)
+
 
 class CardAccountModel(models.Model):
     user = models.ForeignKey(
@@ -63,18 +76,7 @@ class TransactionModel(models.Model):
     )
     bank = models.CharField(
         max_length=16,
-        choices=(
-            ("mono", "Monobank"),
-            ("privat", "PrivatBank"),
-            ("oschad", "Oschadbank"),
-            ("raiff", "Raiffeisen Bank"),
-            ("pumb", "PUMB"),
-            ("abank", "A-Bank"),
-            ("izibank", "Izibank"),
-            ("sense", "Sense Bank"),
-            ("ukrsib", "Ukrsibbank"),
-            ("others", "Другой"),
-        ),
+        choices=BANK_CHOICES,
         default='mono',
         verbose_name=_("Банк")
     )
@@ -144,3 +146,35 @@ class TransactionModel(models.Model):
 
     def __str__(self):
         return f"Транзакция {self.id}: {self.amount} ({self.get_operation_type_display()})"
+
+
+class UserContactModel(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name=_("Пользователь"),
+        related_name="contacts"
+    )
+    avatar = models.ImageField(
+        upload_to='contacts/avatars/',
+        null=True,
+        blank=True,
+        verbose_name=_("Аватар контакта")
+    )
+    name = models.CharField(
+        max_length=32,
+        verbose_name=_("Имя контакта")
+    )
+    bank = models.CharField(
+        max_length=16,
+        choices=BANK_CHOICES,
+        default='mono',
+        verbose_name=_("Банк")
+    )
+
+    class Meta:
+        verbose_name = _("Контакт")
+        verbose_name_plural = _("Контакты")
+
+    def __str__(self):
+        return f"{self.name}"
