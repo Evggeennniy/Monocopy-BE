@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-jh474$xp85k+lv!2bc7lrr0%&4mf(k-y%688%&d&kj&a=x1#or
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["shironenergy.com", "127.0.0.1", 'monocopy-fe.vercel.app']
+ALLOWED_HOSTS = ["kolshaz.xyz", "127.0.0.1"]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
