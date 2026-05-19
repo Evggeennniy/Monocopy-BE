@@ -29,15 +29,13 @@ ALLOWED_HOSTS = ["shironenergy.com", "127.0.0.1", 'monocopy-fe.vercel.app']
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    'https://monocopy-fe.vercel.app',
-    "https://shironenergy.com",
+    'https://kolshaz.xyz',
     "http://192.168.0.109:5173",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
-    'https://monocopy-fe.vercel.app',
-    "https://shironenergy.com",
+    'https://kolshaz.xyz',
     "http://192.168.0.109:5173",
 ]
 
