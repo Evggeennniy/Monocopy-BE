@@ -25,20 +25,21 @@ SECRET_KEY = "django-insecure-jh474$xp85k+lv!2bc7lrr0%&4mf(k-y%688%&d&kj&a=x1#or
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["shironenergy.com", "127.0.0.1", 'monocopy-fe.vercel.app']
+ALLOWED_HOSTS = ["shironenergy.com", "127.0.0.1", "monocopy-fe.vercel.app"]
+
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    'https://monocopy-fe.vercel.app',
+    "https://monocopy-fe.vercel.app",
     "https://shironenergy.com",
-    "http://192.168.0.109:5173",
+    "http://192.168.0.106:5173",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
-    'https://monocopy-fe.vercel.app',
+    "https://monocopy-fe.vercel.app",
     "https://shironenergy.com",
-    "http://192.168.0.109:5173",
+    "http://192.168.0.106:5173",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -58,19 +59,16 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
-    'rest_framework',
+    "rest_framework",
     "drf_spectacular",
     "drf_spectacular_sidecar",
-    'drf_yasg',
-    'corsheaders',
-
-    'bank_accounts',
-
+    "drf_yasg",
+    "corsheaders",
+    "bank_accounts",
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -147,9 +145,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / '..' / "staticfiles"
+STATIC_ROOT = BASE_DIR / ".." / "staticfiles"
 MEDIA_URL = "https://shironenergy.com/media/"
-MEDIA_ROOT = BASE_DIR / '..' / 'staticfiles' / 'media'
+MEDIA_ROOT = BASE_DIR / ".." / "staticfiles" / "media"
 
 
 # Default primary key field type
@@ -161,5 +159,5 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    )
+    ),
 }
