@@ -27,18 +27,23 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["kolshaz.xyz", "127.0.0.1"]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "https://kolshaz.xyz",
-    "http://192.168.0.106:5173",
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "https://kolshaz.xyz",
+#     "http://localhost",
+#     "http://localhost:5173",
+#     "http://192.168.0.106:5173",
+#     "http://192.168.0.106",
+# ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
     "https://kolshaz.xyz",
+    "http://localhost",
+    "http://localhost:5173",
     "http://192.168.0.106:5173",
+    "http://192.168.0.106",
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 SESSION_COOKIE_SAMESITE = "Lax"
